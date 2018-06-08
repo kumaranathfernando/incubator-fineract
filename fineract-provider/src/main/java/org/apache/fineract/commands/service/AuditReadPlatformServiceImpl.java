@@ -29,6 +29,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.fineract.accounting.glaccount.data.GLAccountData;
+import org.apache.fineract.accounting.glaccount.service.GLAccountReadPlatformService;
+import org.apache.fineract.accounting.journalentry.data.JournalEntryAssociationParametersData;
 import org.apache.fineract.commands.data.AuditData;
 import org.apache.fineract.commands.data.AuditSearchData;
 import org.apache.fineract.commands.data.ProcessingResultLookup;
@@ -69,6 +72,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import com.google.common.reflect.TypeToken;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -92,6 +96,7 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
     private final PaginationParametersDataValidator paginationParametersDataValidator;
     private final SavingsProductReadPlatformService savingsProductReadPlatformService;
     private final DepositProductReadPlatformService depositProductReadPlatformService;
+	private final GLAccountReadPlatformService glAccountReadPlatformService;
     private final ColumnValidator columnValidator;
 
     @Autowired
@@ -102,6 +107,7 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
             final PaginationParametersDataValidator paginationParametersDataValidator,
             final SavingsProductReadPlatformService savingsProductReadPlatformService,
             final DepositProductReadPlatformService depositProductReadPlatformService,
+			final GLAccountReadPlatformService  glAccountReadPlatformService,
             final ColumnValidator columnValidator) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -114,6 +120,7 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
         this.paginationParametersDataValidator = paginationParametersDataValidator;
         this.savingsProductReadPlatformService = savingsProductReadPlatformService;
         this.depositProductReadPlatformService = depositProductReadPlatformService;
+        this.glAccountReadPlatformService = glAccountReadPlatformService;
         this.columnValidator = columnValidator;
     }
 
@@ -386,12 +393,50 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
 
         }
 
+		translateGLCodes(commandAsJsonMap, auditObject,"credits");
+        translateGLCodes(commandAsJsonMap, auditObject,"debits");
+
         updateEnumerations(commandAsJsonMap, auditObject, auditResult.getEntityName());
 
         final String newAuditAsJson = this.fromApiJsonHelper.toJson(commandAsJsonMap);
         auditResult.setCommandAsJson(newAuditAsJson);
 
         return auditResult;
+    }
+    
+    //Parse the GL Ids and return GL Code and Description
+    private void translateGLCodes(Map<String, Object> commandAsJsonMap,  JsonObject auditObject, String entryName) {
+    	
+    	 if (commandAsJsonMap.containsKey(entryName)) {
+             Long glAccountId = null;
+             JournalEntryAssociationParametersData param = new JournalEntryAssociationParametersData();
+             if (auditObject.get(entryName).isJsonArray())
+             {
+	             final JsonArray originalGLArr = auditObject.get(entryName).getAsJsonArray();
+	             JsonObject originalEachGL = null;
+		         JsonObject finalGLObj = null;
+		         JsonArray finalGLArr = new JsonArray();
+	             if (originalGLArr.size()>0) {
+	             	commandAsJsonMap.remove(entryName);
+	             	
+	             	GLAccountData glDetailInfoFromDB= null;
+	             	
+	             	for (int i =0; i< originalGLArr.size(); i++)
+	             	{
+	             		 originalEachGL = originalGLArr.get(i).getAsJsonObject();
+	                 	 glAccountId = Long.valueOf(originalEachGL.get("glAccountId").getAsString());
+	                     glDetailInfoFromDB = this.glAccountReadPlatformService.retrieveGLAccountById(glAccountId, param);
+	                     
+	                     finalGLObj = new JsonObject();
+	                     finalGLObj.addProperty("Code",glDetailInfoFromDB.getGlCode());
+	                     finalGLObj.addProperty("Name",glDetailInfoFromDB.getName());
+	                     finalGLObj.addProperty("Amount",originalEachGL.get("amount").getAsString());
+	                     finalGLArr.add(finalGLObj);
+	             	}
+	                 commandAsJsonMap.put(entryName, finalGLArr);                
+	             }
+             }
+         }
     }
 
     private void updateEnumerations(Map<String, Object> commandAsJsonMap, JsonObject auditObject, String entityName) {
