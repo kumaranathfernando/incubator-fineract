@@ -18,7 +18,7 @@
 --
 
 
-CREATE TABLE `m_family_members` (
+CREATE TABLE IF NOT EXISTS `m_family_members` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `client_id` bigint(20) NOT NULL,
   `firstname` varchar(50) NOT NULL,
@@ -49,12 +49,12 @@ CREATE TABLE `m_family_members` (
 
 -- permissions
 
-INSERT INTO `m_permission` (`grouping`, `code`, `entity_name`, `action_name`, `can_maker_checker`) VALUES ('portfolio', 'CREATE_FAMILYMEMBERS', 'FAMILYMEMBERS', 'CREATE', 0);
-INSERT INTO `m_permission` (`grouping`, `code`, `entity_name`, `action_name`, `can_maker_checker`) VALUES ('portfolio', 'UPDATE_FAMILYMEMBERS', 'FAMILYMEMBERS', 'UPDATE', 0);
-INSERT INTO `m_permission` (`grouping`, `code`, `entity_name`, `action_name`, `can_maker_checker`) VALUES ('portfolio', 'DELETE_FAMILYMEMBERS', 'FAMILYMEMBERS', 'DELETE', 0);
+INSERT IGNORE INTO `m_permission` (`grouping`, `code`, `entity_name`, `action_name`, `can_maker_checker`) VALUES ('portfolio', 'CREATE_FAMILYMEMBERS', 'FAMILYMEMBERS', 'CREATE', 0);
+INSERT IGNORE INTO `m_permission` (`grouping`, `code`, `entity_name`, `action_name`, `can_maker_checker`) VALUES ('portfolio', 'UPDATE_FAMILYMEMBERS', 'FAMILYMEMBERS', 'UPDATE', 0);
+INSERT IGNORE INTO `m_permission` (`grouping`, `code`, `entity_name`, `action_name`, `can_maker_checker`) VALUES ('portfolio', 'DELETE_FAMILYMEMBERS', 'FAMILYMEMBERS', 'DELETE', 0);
 
 -- code inserts
 
-INSERT INTO `m_code` (`code_name`, `is_system_defined`) VALUES ('MARITAL STATUS', 1);
-INSERT INTO `m_code` (`code_name`, `is_system_defined`) VALUES ('RELATIONSHIP', 1);
-INSERT INTO `m_code` (`code_name`, `is_system_defined`) VALUES ('PROFESSION', 1);
+INSERT IGNORE INTO `m_code` (`code_name`, `is_system_defined`) VALUES ('MARITAL STATUS', 1);
+INSERT IGNORE INTO `m_code` (`code_name`, `is_system_defined`) VALUES ('RELATIONSHIP', 1);
+INSERT IGNORE INTO `m_code` (`code_name`, `is_system_defined`) VALUES ('PROFESSION', 1);
