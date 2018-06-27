@@ -199,8 +199,8 @@ public class SavingsAccountData {
 
         @Override
         public int compare(SavingsAccountData savings1, SavingsAccountData savings2) {
-            String clientOfSavings1 = savings1.getClientName().toUpperCase(Locale.ENGLISH);
-            String clientOfSavings2 = savings2.getClientName().toUpperCase(Locale.ENGLISH);
+            String clientOfSavings1 = savings1.getClientName().toUpperCase(Locale.ENGLISH)+savings1.getClientId();
+            String clientOfSavings2 = savings2.getClientName().toUpperCase(Locale.ENGLISH)+savings2.getClientId();
             return clientOfSavings1.compareTo(clientOfSavings2);
         }
     };
