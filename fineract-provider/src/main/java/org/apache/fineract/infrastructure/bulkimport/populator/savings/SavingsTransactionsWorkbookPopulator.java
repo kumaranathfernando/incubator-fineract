@@ -46,8 +46,8 @@ public class SavingsTransactionsWorkbookPopulator extends AbstractWorkbookPopula
     private List<SavingsAccountData>savingsAccounts;
 
     public SavingsTransactionsWorkbookPopulator(OfficeSheetPopulator officeSheetPopulator,
-            ClientSheetPopulator clientSheetPopulator, ExtrasSheetPopulator extrasSheetPopulator,
-            List<SavingsAccountData> savingsAccounts) {
+                                                ClientSheetPopulator clientSheetPopulator, ExtrasSheetPopulator extrasSheetPopulator,
+                                                List<SavingsAccountData> savingsAccounts) {
         this.officeSheetPopulator = officeSheetPopulator;
         this.clientSheetPopulator = clientSheetPopulator;
         this.extrasSheetPopulator = extrasSheetPopulator;
@@ -145,12 +145,12 @@ public class SavingsTransactionsWorkbookPopulator extends AbstractWorkbookPopula
         String clientName = "";
         Long clientId = null;
         for(int i = 0; i < savingsAccounts.size(); i++){
-            if(!clientName.equals(savingsAccounts.get(i).getClientName())) {
+            if(clientId!=savingsAccounts.get(i).getClientId()) {
                 endIndex = i + 1;
                 clientNameToBeginEndIndexes.put(clientName, new Integer[]{startIndex, endIndex});
                 startIndex = i + 2;
-                clientName = savingsAccounts.get(i).getClientName();
                 clientId = savingsAccounts.get(i).getClientId();
+                clientName = savingsAccounts.get(i).getClientName()+"_"+clientId;
                 clientsWithActiveSavings.add(clientName);
                 clientIdsWithActiveSavings.add(clientId);
             }
@@ -163,7 +163,10 @@ public class SavingsTransactionsWorkbookPopulator extends AbstractWorkbookPopula
         //Account Number Named  after Clients
         for(int j = 0; j < clientsWithActiveSavings.size(); j++) {
             Name name = savingsTransactionWorkbook.createName();
-            name.setNameName("Account_" + clientsWithActiveSavings.get(j).replaceAll(" ", "_") + "_" + clientIdsWithActiveSavings.get(j) + "_");
+            String excelName="Account_" + clientsWithActiveSavings.get(j).replaceAll(" ", "_") + "_" + clientIdsWithActiveSavings.get(j) + "_";
+            String splitExcelName[]=excelName.split("_");
+            String newExcelName =splitExcelName[0]+"_"+splitExcelName[1]+"_"+splitExcelName[2]+"_"+splitExcelName[4]+"_";
+            name.setNameName(newExcelName);
             name.setRefersToFormula(TemplatePopulateImportConstants.SAVINGS_TRANSACTION_SHEET_NAME+"!$Q$" + clientNameToBeginEndIndexes.get(clientsWithActiveSavings.get(j))[0] + ":$Q$" + clientNameToBeginEndIndexes.get(clientsWithActiveSavings.get(j))[1]);
         }
 
