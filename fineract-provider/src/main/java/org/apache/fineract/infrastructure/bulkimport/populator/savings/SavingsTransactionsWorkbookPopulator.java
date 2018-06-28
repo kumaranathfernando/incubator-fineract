@@ -167,7 +167,7 @@ public class SavingsTransactionsWorkbookPopulator extends AbstractWorkbookPopula
             String splitExcelName[]=excelName.split("_");
             String newExcelName="";
             for (int i = 0; i <splitExcelName.length-1 ; i++) {
-                newExcelName=newExcelName.concat(splitExcelName[i]+"-");
+                newExcelName=newExcelName.concat(splitExcelName[i]+"_");
             }
             //String newExcelName =splitExcelName[0]+"_"+splitExcelName[1]+"_"+splitExcelName[2]+"_"+splitExcelName[3]+"_";
             name.setNameName(newExcelName);
