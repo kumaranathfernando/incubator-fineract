@@ -143,9 +143,9 @@ public class SavingsTransactionsWorkbookPopulator extends AbstractWorkbookPopula
         ArrayList<Long> clientIdsWithActiveSavings = new ArrayList<>();
         int startIndex = 1, endIndex = 1;
         String clientName = "";
-        Long clientId = null;
+        Long clientId = 0L;
         for(int i = 0; i < savingsAccounts.size(); i++){
-            if(clientId!=savingsAccounts.get(i).getClientId()) {
+            if(!clientId.equals(savingsAccounts.get(i).getClientId())) {
                 endIndex = i + 1;
                 clientNameToBeginEndIndexes.put(clientName, new Integer[]{startIndex, endIndex});
                 startIndex = i + 2;
