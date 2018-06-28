@@ -165,7 +165,11 @@ public class SavingsTransactionsWorkbookPopulator extends AbstractWorkbookPopula
             Name name = savingsTransactionWorkbook.createName();
             String excelName="Account_" + clientsWithActiveSavings.get(j).replaceAll(" ", "_") + "_" + clientIdsWithActiveSavings.get(j) + "_";
             String splitExcelName[]=excelName.split("_");
-            String newExcelName =splitExcelName[0]+"_"+splitExcelName[1]+"_"+splitExcelName[2]+"_"+splitExcelName[4]+"_";
+            String newExcelName="";
+            for (int i = 0; i <splitExcelName.length-1 ; i++) {
+                newExcelName=newExcelName.concat(splitExcelName[i]+"-");
+            }
+            //String newExcelName =splitExcelName[0]+"_"+splitExcelName[1]+"_"+splitExcelName[2]+"_"+splitExcelName[3]+"_";
             name.setNameName(newExcelName);
             name.setRefersToFormula(TemplatePopulateImportConstants.SAVINGS_TRANSACTION_SHEET_NAME+"!$Q$" + clientNameToBeginEndIndexes.get(clientsWithActiveSavings.get(j))[0] + ":$Q$" + clientNameToBeginEndIndexes.get(clientsWithActiveSavings.get(j))[1]);
         }
