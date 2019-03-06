@@ -179,7 +179,7 @@ public class LoanRepaymentWorkbookPopulator extends AbstractWorkbookPopulator {
 		String clientName = "";
 		String clientId = "";
 		for (int i = 0; i < allloans.size(); i++) {
-			if (!clientId.equals(allloans.get(i).getClientId().toString())) {
+			if (!clientId.equals(allloans.get(i).getClientId().toString()) && allloans.get(i).getStatusStringValue().equals("Active")) {
 				endIndex = i + 1;
 				clientNameToBeginEndIndexes.put(clientName, new Integer[] { startIndex, endIndex });
 				startIndex = i + 2;
