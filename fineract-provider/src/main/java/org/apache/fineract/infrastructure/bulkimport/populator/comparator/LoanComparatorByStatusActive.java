@@ -21,6 +21,7 @@ package org.apache.fineract.infrastructure.bulkimport.populator.comparator;
 import org.apache.fineract.portfolio.loanaccount.data.LoanAccountData;
 
 import java.util.Comparator;
+import java.util.Locale;
 
 /**
  * Sorting the loan values based on loan status giving priority to active loans
@@ -34,9 +35,12 @@ public class LoanComparatorByStatusActive implements Comparator<LoanAccountData>
         boolean isData1StatusActive = o1.getStatusStringValue().equals("Active");
         boolean isData2StatusActive = o2.getStatusStringValue().equals("Active");
 
+        String isData1Client = o1.getClientName().toUpperCase(Locale.ENGLISH)+o1.getClientId();
+        String isData2Client = o2.getClientName().toUpperCase(Locale.ENGLISH)+o2.getClientId();
+
         // if both status active, these have the same rank
         if (isData1StatusActive && isData2StatusActive){
-            return 0;
+            return isData1Client.compareTo(isData2Client);
         }
 
         if (isData1StatusActive){
