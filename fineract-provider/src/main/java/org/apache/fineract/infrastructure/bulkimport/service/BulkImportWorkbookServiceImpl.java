@@ -191,7 +191,7 @@ public class BulkImportWorkbookServiceImpl implements BulkImportWorkbookService 
 
         final Long documentId = this.documentWritePlatformService.createInternalDocument(
                 DocumentWritePlatformServiceJpaRepositoryImpl.DOCUMENT_MANAGEMENT_ENTITY.IMPORT.name(),
-                this.securityContext.authenticatedUser().getId(), null, clonedInputStreamWorkbook,
+                1L, null, clonedInputStreamWorkbook,
                 URLConnection.guessContentTypeFromName(fileName), fileName, null, fileName);
         final Document document = this.documentRepository.findOne(documentId);
 
