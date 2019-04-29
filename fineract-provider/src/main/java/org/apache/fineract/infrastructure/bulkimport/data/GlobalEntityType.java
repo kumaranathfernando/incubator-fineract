@@ -59,7 +59,8 @@ public enum GlobalEntityType {
     SHARE_ACCOUNTS(33,"shareaccounts"),
     RECURRING_DEPOSIT_ACCOUNTS(34,"recurringdeposits"),
     RECURRING_DEPOSIT_ACCOUNTS_TRANSACTIONS(35,"recurringdepositstransactions"),
-    CLIENT(36,"client");
+    CLIENT(36,"client"),
+    PARENT_ENTITY_TYPE_ID(1,"parententitytypeid");
 
     private final Integer value;
     private final String code;
