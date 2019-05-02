@@ -188,10 +188,13 @@ public class BulkImportWorkbookServiceImpl implements BulkImportWorkbookService 
         final String fileName = fileDetail.getFileName();
 
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
-        Long authUserId =this.securityContext.authenticatedUser().getId();
+
+        this.securityContext.authenticatedUser();
+        Long parentEntityTypeId=1L;
+
         final Long documentId = this.documentWritePlatformService.createInternalDocument(
                 DocumentWritePlatformServiceJpaRepositoryImpl.DOCUMENT_MANAGEMENT_ENTITY.IMPORT.name(),
-                GlobalEntityType.PARENT_ENTITY_TYPE_ID.getValue().longValue(), null, clonedInputStreamWorkbook,
+                parentEntityTypeId, null, clonedInputStreamWorkbook,
                 URLConnection.guessContentTypeFromName(fileName), fileName, null, fileName);
         final Document document = this.documentRepository.findOne(documentId);
 
