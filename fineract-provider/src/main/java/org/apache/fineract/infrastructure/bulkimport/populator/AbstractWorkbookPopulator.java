@@ -149,8 +149,10 @@ public abstract class AbstractWorkbookPopulator implements WorkbookPopulator {
                         row = sheet.createRow(rowIndex);
                     writeString(nameCol, row, group.getName().replaceAll("[ )(] ", "_"));
 
-                    date = inputFormat.parse(group.getActivationDate().toString());
-                    writeDate(activationDateCol, row, outputFormat.format(date), dateCellStyle,dateFormat);
+                        if(group.getActivationDate().toString()!=null) {
+                            date = inputFormat.parse(group.getActivationDate().toString());
+                            writeDate(activationDateCol, row, outputFormat.format(date), dateCellStyle, dateFormat);
+                        }
                     }
                 }
             } catch (ParseException e) {
